@@ -1,0 +1,143 @@
+﻿@model NexusWork.Models.PayrollEntry
+
+@{
+    ViewData["Title"] = "Edit Payroll";
+}
+
+<div class="container">
+    <h1 class="mb-4">
+        <i class="bi bi-pencil-square"></i> Edit Payroll
+    </h1>
+
+    <div class="row">
+        <div class="col-md-10">
+            <div class="card">
+                <div class="card-header bg-warning">
+                    <i class="bi bi-cash-stack"></i> Edit Payroll Entry
+                </div>
+                <div class="card-body">
+                    <form asp-action="Edit">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+                        <input type="hidden" asp-for="Id" />
+                        <input type="hidden" asp-for="GeneratedDate" />
+
+                        <!-- Employee & Period -->
+                        <h5 class="border-bottom pb-2 mb-3">
+                            <i class="bi bi-person"></i> Employee & Pay Period
+                        </h5>
+
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label asp-for="EmployeeId" class="form-label"></label>
+                                <select asp-for="EmployeeId" class="form-select" asp-items="ViewBag.EmployeeId">
+                                    <option value="">-- Select Employee --</option>
+                                </select>
+                                <span asp-validation-for="EmployeeId" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label asp-for="PayMonth" class="form-label"></label>
+                                <select asp-for="PayMonth" class="form-select" asp-items="ViewBag.PayMonths">
+                                    <option value="">-- Select Month --</option>
+                                </select>
+                                <span asp-validation-for="PayMonth" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label asp-for="PayYear" class="form-label"></label>
+                                <input asp-for="PayYear" class="form-control" />
+                                <span asp-validation-for="PayYear" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <!-- Earnings -->
+                        <h5 class="border-bottom pb-2 mb-3 mt-4">
+                            <i class="bi bi-plus-circle text-success"></i> Earnings (BDT)
+                        </h5>
+
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label asp-for="BasicSalaryBDT" class="form-label"></label>
+                                <div class="input-group">
+                                    <span class="input-group-text">৳</span>
+                                    <input asp-for="BasicSalaryBDT" class="form-control" />
+                                </div>
+                                <span asp-validation-for="BasicSalaryBDT" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label asp-for="HouseRentBDT" class="form-label"></label>
+                                <div class="input-group">
+                                    <span class="input-group-text">৳</span>
+                                    <input asp-for="HouseRentBDT" class="form-control" />
+                                </div>
+                                <span asp-validation-for="HouseRentBDT" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label asp-for="MedicalAllowanceBDT" class="form-label"></label>
+                                <div class="input-group">
+                                    <span class="input-group-text">৳</span>
+                                    <input asp-for="MedicalAllowanceBDT" class="form-control" />
+                                </div>
+                                <span asp-validation-for="MedicalAllowanceBDT" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label asp-for="TransportAllowanceBDT" class="form-label"></label>
+                                <div class="input-group">
+                                    <span class="input-group-text">৳</span>
+                                    <input asp-for="TransportAllowanceBDT" class="form-control" />
+                                </div>
+                                <span asp-validation-for="TransportAllowanceBDT" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label asp-for="BonusBDT" class="form-label"></label>
+                                <div class="input-group">
+                                    <span class="input-group-text">৳</span>
+                                    <input asp-for="BonusBDT" class="form-control" />
+                                </div>
+                                <span asp-validation-for="BonusBDT" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <!-- Deductions -->
+                        <h5 class="border-bottom pb-2 mb-3 mt-4">
+                            <i class="bi bi-dash-circle text-danger"></i> Deductions (BDT)
+                        </h5>
+
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label asp-for="DeductionsBDT" class="form-label"></label>
+                                <div class="input-group">
+                                    <span class="input-group-text">৳</span>
+                                    <input asp-for="DeductionsBDT" class="form-control" />
+                                </div>
+                                <span asp-validation-for="DeductionsBDT" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-check mt-4">
+                                    <input asp-for="IsPaid" class="form-check-input" type="checkbox" />
+                                    <label asp-for="IsPaid" class="form-check-label"></label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4">
+                            <button type="submit" class="btn btn-warning">
+                                <i class="bi bi-check-circle"></i> Save Changes
+                            </button>
+                            <a asp-action="Index" class="btn btn-secondary">
+                                <i class="bi bi-x-circle"></i> Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,65 @@
+﻿@model NexusWork.Models.PayrollEntry
+
+@{
+    ViewData["Title"] = "Delete Payroll";
+}
+
+<div class="container">
+    <h1 class="mb-4 text-danger">
+        <i class="bi bi-trash"></i> Delete Payroll Entry
+    </h1>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card border-danger">
+                <div class="card-header bg-danger text-white">
+                    <i class="bi bi-exclamation-triangle"></i> Confirm Deletion
+                </div>
+                <div class="card-body">
+                    <p class="lead">Are you sure you want to delete this payroll entry?</p>
+
+                    <dl class="row">
+                        <dt class="col-sm-5">Employee</dt>
+                        <dd class="col-sm-7"><strong>@(Model.Employee?.FullName ?? "N/A")</strong></dd>
+
+                        <dt class="col-sm-5">Pay Period</dt>
+                        <dd class="col-sm-7">@Model.PayPeriod</dd>
+
+                        <dt class="col-sm-5">Basic Salary</dt>
+                        <dd class="col-sm-7">৳ @Model.BasicSalaryBDT.ToString("N2")</dd>
+
+                        <dt class="col-sm-5">Net Salary</dt>
+                        <dd class="col-sm-7 text-primary fw-bold">৳ @Model.NetSalaryBDT.ToString("N2")</dd>
+
+                        <dt class="col-sm-5">Status</dt>
+                        <dd class="col-sm-7">
+                            @if (Model.IsPaid)
+                            {
+                                <span class="badge bg-success">Paid</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-warning">Pending</span>
+                            }
+                        </dd>
+                    </dl>
+
+                    <div class="alert alert-warning">
+                        <i class="bi bi-exclamation-circle"></i> This action cannot be undone.
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <form asp-action="Delete">
+                        <input type="hidden" asp-for="Id" />
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-trash"></i> Yes, Delete
+                        </button>
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="bi bi-x-circle"></i> Cancel
+                        </a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

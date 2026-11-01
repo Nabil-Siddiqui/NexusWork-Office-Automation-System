@@ -1,0 +1,199 @@
+﻿@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="container-fluid">
+    <h1 class="mb-4">
+        <i class="bi bi-speedometer2"></i> Admin Dashboard
+    </h1>
+
+    <!-- Stats Cards Row -->
+    <div class="row mb-4">
+        <!-- Employees Card -->
+        <div class="col-md-3 mb-3">
+            <div class="card bg-primary text-white h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-uppercase mb-1">Total Employees</h6>
+                            <h2 class="mb-0">@ViewBag.TotalEmployees</h2>
+                        </div>
+                        <i class="bi bi-people-fill fs-1 opacity-50"></i>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent border-0">
+                    <a href="/Employee" class="text-white text-decoration-none">
+                        View All <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Active Employees Card -->
+        <div class="col-md-3 mb-3">
+            <div class="card bg-success text-white h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-uppercase mb-1">Active Employees</h6>
+                            <h2 class="mb-0">@ViewBag.ActiveEmployees</h2>
+                        </div>
+                        <i class="bi bi-person-check-fill fs-1 opacity-50"></i>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent border-0">
+                    <small>Currently working</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Tasks Card -->
+        <div class="col-md-3 mb-3">
+            <div class="card bg-warning text-dark h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-uppercase mb-1">Total Tasks</h6>
+                            <h2 class="mb-0">@ViewBag.TotalTasks</h2>
+                        </div>
+                        <i class="bi bi-list-task fs-1 opacity-50"></i>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent border-0">
+                    <a href="/WorkTask" class="text-dark text-decoration-none">
+                        Manage Tasks <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Documents Card -->
+        <div class="col-md-3 mb-3">
+            <div class="card bg-info text-white h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-uppercase mb-1">Documents</h6>
+                            <h2 class="mb-0">@ViewBag.TotalDocuments</h2>
+                        </div>
+                        <i class="bi bi-file-earmark-text-fill fs-1 opacity-50"></i>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent border-0">
+                    <a href="/Document" class="text-white text-decoration-none">
+                        View Documents <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Task Status Row -->
+    <div class="row mb-4">
+        <div class="col-md-4 mb-3">
+            <div class="card border-secondary h-100">
+                <div class="card-body text-center">
+                    <i class="bi bi-clock-history fs-1 text-secondary"></i>
+                    <h3 class="mt-2">@ViewBag.PendingTasks</h3>
+                    <p class="text-muted mb-0">Pending Tasks</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card border-primary h-100">
+                <div class="card-body text-center">
+                    <i class="bi bi-arrow-repeat fs-1 text-primary"></i>
+                    <h3 class="mt-2">@ViewBag.InProgressTasks</h3>
+                    <p class="text-muted mb-0">In Progress</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card border-success h-100">
+                <div class="card-body text-center">
+                    <i class="bi bi-check-circle-fill fs-1 text-success"></i>
+                    <h3 class="mt-2">@ViewBag.CompletedTasks</h3>
+                    <p class="text-muted mb-0">Completed</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Tasks Table -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-dark text-white">
+                    <i class="bi bi-clock"></i> Recent Tasks
+                </div>
+                <div class="card-body">
+                    @if (ViewBag.RecentTasks != null && ((IEnumerable<NexusWork.Models.WorkTask>)ViewBag.RecentTasks).Any())
+                    {
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Assigned To</th>
+                                    <th>Deadline</th>
+                                    <th>Priority</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var task in (IEnumerable<NexusWork.Models.WorkTask>)ViewBag.RecentTasks)
+                                {
+                                    <tr>
+                                        <td>@task.Title</td>
+                                        <td>@(task.Employee?.FullName ?? "N/A")</td>
+                                        <td>@task.Deadline.ToString("dd MMM yyyy")</td>
+                                        <td>
+                                            <span class="badge @task.PriorityBadgeClass">@task.Priority</span>
+                                        </td>
+                                        <td>
+                                            <span class="badge @task.StatusBadgeClass">@task.Status</span>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                    else
+                    {
+                        <div class="text-center py-4">
+                            <i class="bi bi-inbox fs-1 text-muted"></i>
+                            <p class="text-muted mt-2">No tasks assigned yet.</p>
+                            <a href="/WorkTask/Create" class="btn btn-primary">
+                                <i class="bi bi-plus-circle"></i> Create First Task
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-secondary text-white">
+                    <i class="bi bi-lightning-fill"></i> Quick Actions
+                </div>
+                <div class="card-body">
+                    <a href="/Employee/Create" class="btn btn-outline-primary me-2 mb-2">
+                        <i class="bi bi-person-plus"></i> Add Employee
+                    </a>
+                    <a href="/WorkTask/Create" class="btn btn-outline-success me-2 mb-2">
+                        <i class="bi bi-plus-square"></i> Assign Task
+                    </a>
+                    <a href="/PayrollEntry/Create" class="btn btn-outline-warning me-2 mb-2">
+                        <i class="bi bi-cash-stack"></i> Generate Payroll
+                    </a>
+                    <a href="/Document/Create" class="btn btn-outline-info me-2 mb-2">
+                        <i class="bi bi-file-earmark-plus"></i> Add Document
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

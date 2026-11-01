@@ -1,0 +1,137 @@
+﻿@model NexusWork.Models.PayrollEntry
+
+@{
+    ViewData["Title"] = "Payslip";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-success text-white text-center">
+                    <h4 class="mb-0"><i class="bi bi-file-earmark-text"></i> PAYSLIP</h4>
+                    <small>@Model.PayPeriod</small>
+                </div>
+                <div class="card-body">
+                    <!-- Company Header -->
+                    <div class="text-center mb-4">
+                        <h3 class="text-primary">NexusWork</h3>
+                        <p class="text-muted mb-0">Office Automation System</p>
+                        <hr />
+                    </div>
+
+                    <!-- Employee Info -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <p><strong>Employee Name:</strong> @(Model.Employee?.FullName ?? "N/A")</p>
+                            <p><strong>Employee ID:</strong> @(Model.Employee?.EmployeeCode ?? "N/A")</p>
+                            <p><strong>Department:</strong> @(Model.Employee?.Department ?? "N/A")</p>
+                        </div>
+                        <div class="col-md-6 text-md-end">
+                            <p><strong>Pay Period:</strong> @Model.PayPeriod</p>
+                            <p><strong>Generated:</strong> @Model.GeneratedDate.ToString("dd MMM yyyy")</p>
+                            <p>
+                                <strong>Status:</strong>
+                                @if (Model.IsPaid)
+                                {
+                                    <span class="badge bg-success">Paid</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-warning">Pending</span>
+                                }
+                            </p>
+                        </div>
+                    </div>
+
+                    <hr />
+
+                    <!-- Earnings -->
+                    <h5 class="text-success"><i class="bi bi-plus-circle"></i> Earnings</h5>
+                    <table class="table table-sm">
+                        <tbody>
+                            <tr>
+                                <td>Basic Salary</td>
+                                <td class="text-end">৳ @Model.BasicSalaryBDT.ToString("N2")</td>
+                            </tr>
+                            <tr>
+                                <td>House Rent Allowance</td>
+                                <td class="text-end">৳ @Model.HouseRentBDT.ToString("N2")</td>
+                            </tr>
+                            <tr>
+                                <td>Medical Allowance</td>
+                                <td class="text-end">৳ @Model.MedicalAllowanceBDT.ToString("N2")</td>
+                            </tr>
+                            <tr>
+                                <td>Transport Allowance</td>
+                                <td class="text-end">৳ @Model.TransportAllowanceBDT.ToString("N2")</td>
+                            </tr>
+                            <tr>
+                                <td>Bonus</td>
+                                <td class="text-end">৳ @Model.BonusBDT.ToString("N2")</td>
+                            </tr>
+                            <tr class="table-success fw-bold">
+                                <td>Gross Salary</td>
+                                <td class="text-end">৳ @Model.GrossSalaryBDT.ToString("N2")</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- Deductions -->
+                    <h5 class="text-danger mt-4"><i class="bi bi-dash-circle"></i> Deductions</h5>
+                    <table class="table table-sm">
+                        <tbody>
+                            <tr>
+                                <td>Total Deductions</td>
+                                <td class="text-end">৳ @Model.DeductionsBDT.ToString("N2")</td>
+                            </tr>
+                            <tr class="table-danger fw-bold">
+                                <td>Total Deductions</td>
+                                <td class="text-end">৳ @Model.DeductionsBDT.ToString("N2")</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <hr />
+
+                    <!-- Net Salary -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>Net Salary Payable</h5>
+                        </div>
+                        <div class="col-md-6 text-end">
+                            <h3 class="text-primary">৳ @Model.NetSalaryBDT.ToString("N2")</h3>
+                        </div>
+                    </div>
+
+                    @if (Model.Employee != null)
+                    {
+                        <hr />
+                        <div class="row">
+                            <div class="col-12">
+                                <small class="text-muted">
+                                    <strong>Bank:</strong> @Model.Employee.BankName |
+                                    <strong>Account:</strong> @Model.Employee.BankAccountNumber
+                                </small>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div class="card-footer text-center">
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left"></i> Back to List
+                    </a>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">
+                            <i class="bi bi-pencil"></i> Edit
+                        </a>
+                    }
+                    <button class="btn btn-primary" onclick="window.print()">
+                        <i class="bi bi-printer"></i> Print
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

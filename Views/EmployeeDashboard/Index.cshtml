@@ -1,0 +1,267 @@
+﻿@{
+    ViewData["Title"] = "My Dashboard";
+}
+
+<div class="container-fluid">
+    @if (ViewBag.NotLinked == true)
+    {
+        <!-- User Not Linked to Employee -->
+        <div class="row justify-content-center mt-5">
+            <div class="col-md-6">
+                <div class="card border-warning">
+                    <div class="card-header bg-warning">
+                        <i class="bi bi-exclamation-triangle"></i> Account Not Linked
+                    </div>
+                    <div class="card-body text-center">
+                        <i class="bi bi-person-x fs-1 text-warning"></i>
+                        <h4 class="mt-3">Your Account is Not Linked</h4>
+                        <p class="text-muted">
+                            Your login email <strong>@ViewBag.UserEmail</strong> is not linked to any employee profile.
+                        </p>
+                        <p>
+                            Please contact your <strong>HR Administrator</strong> to create your employee profile with this email address.
+                        </p>
+                        <hr />
+                        <small class="text-muted">
+                            Once your profile is created, you will be able to see your tasks, payroll, and other information here.
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        var employee = ViewBag.Employee as NexusWork.Models.Employee;
+
+        <!-- Welcome Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h1>
+                    <i class="bi bi-person-circle"></i> Welcome, @employee.FirstName!
+                </h1>
+                <p class="text-muted mb-0">
+                    @employee.Designation | @employee.Department
+                </p>
+            </div>
+            <div>
+                <span class="badge bg-primary fs-6">@employee.EmployeeCode</span>
+            </div>
+        </div>
+
+        <!-- Stats Cards Row -->
+        <div class="row mb-4">
+            <!-- Total Tasks -->
+            <div class="col-md-3 mb-3">
+                <div class="card bg-primary text-white h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-uppercase mb-1">Total Tasks</h6>
+                                <h2 class="mb-0">@ViewBag.TotalTasks</h2>
+                            </div>
+                            <i class="bi bi-list-task fs-1 opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pending Tasks -->
+            <div class="col-md-3 mb-3">
+                <div class="card bg-secondary text-white h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-uppercase mb-1">Pending</h6>
+                                <h2 class="mb-0">@ViewBag.PendingTasks</h2>
+                            </div>
+                            <i class="bi bi-clock fs-1 opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- In Progress Tasks -->
+            <div class="col-md-3 mb-3">
+                <div class="card bg-info text-white h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-uppercase mb-1">In Progress</h6>
+                                <h2 class="mb-0">@ViewBag.InProgressTasks</h2>
+                            </div>
+                            <i class="bi bi-arrow-repeat fs-1 opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Completed Tasks -->
+            <div class="col-md-3 mb-3">
+                <div class="card bg-success text-white h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-uppercase mb-1">Completed</h6>
+                                <h2 class="mb-0">@ViewBag.CompletedTasks</h2>
+                            </div>
+                            <i class="bi bi-check-circle fs-1 opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Overdue Warning -->
+        @if (ViewBag.OverdueTasks > 0)
+        {
+            <div class="alert alert-danger d-flex align-items-center mb-4" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2 fs-4"></i>
+                <div>
+                    You have <strong>@ViewBag.OverdueTasks overdue task(s)</strong>. Please complete them as soon as possible.
+                </div>
+            </div>
+        }
+
+        <div class="row">
+            <!-- Recent Tasks -->
+            <div class="col-md-8 mb-4">
+                <div class="card h-100">
+                    <div class="card-header bg-dark text-white">
+                        <i class="bi bi-list-check"></i> My Recent Tasks
+                    </div>
+                    <div class="card-body">
+                        @if (ViewBag.RecentTasks != null && ((IEnumerable<NexusWork.Models.WorkTask>)ViewBag.RecentTasks).Any())
+                        {
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Task</th>
+                                            <th>Deadline</th>
+                                            <th>Priority</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var task in (IEnumerable<NexusWork.Models.WorkTask>)ViewBag.RecentTasks)
+                                        {
+                                            <tr class="@(task.IsOverdue ? "table-danger" : "")">
+                                                <td>
+                                                    <strong>@task.Title</strong>
+                                                    @if (task.IsOverdue)
+                                                    {
+                                                        <span class="badge bg-danger ms-2">Overdue</span>
+                                                    }
+                                                </td>
+                                                <td>@task.Deadline.ToString("dd MMM yyyy")</td>
+                                                <td>
+                                                    <span class="badge @task.PriorityBadgeClass">@task.Priority</span>
+                                                </td>
+                                                <td>
+                                                    <span class="badge @task.StatusBadgeClass">@task.Status</span>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                            <a asp-controller="WorkTask" asp-action="Index" class="btn btn-outline-primary btn-sm">
+                                View All Tasks <i class="bi bi-arrow-right"></i>
+                            </a>
+                        }
+                        else
+                        {
+                            <div class="text-center py-4">
+                                <i class="bi bi-inbox fs-1 text-muted"></i>
+                                <p class="text-muted mt-2">No tasks assigned yet.</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- Salary Info -->
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-header bg-success text-white">
+                        <i class="bi bi-cash-stack"></i> Latest Payroll
+                    </div>
+                    <div class="card-body">
+                        @if (ViewBag.LatestPayroll != null)
+                        {
+                            var payroll = ViewBag.LatestPayroll as NexusWork.Models.PayrollEntry;
+                            <div class="text-center">
+                                <h6 class="text-muted">@payroll.PayPeriod</h6>
+                                <h2 class="text-success">৳ @payroll.NetSalaryBDT.ToString("N2")</h2>
+                                <small class="text-muted">Net Salary</small>
+                            </div>
+                            <hr />
+                            <div class="d-flex justify-content-between">
+                                <span>Basic Salary:</span>
+                                <span>৳ @payroll.BasicSalaryBDT.ToString("N2")</span>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <span>Gross Salary:</span>
+                                <span>৳ @payroll.GrossSalaryBDT.ToString("N2")</span>
+                            </div>
+                            <div class="d-flex justify-content-between text-danger">
+                                <span>Deductions:</span>
+                                <span>- ৳ @payroll.DeductionsBDT.ToString("N2")</span>
+                            </div>
+                            <hr />
+                            <div class="d-flex justify-content-between">
+                                <span>Status:</span>
+                                @if (payroll.IsPaid)
+                                {
+                                    <span class="badge bg-success">Paid</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-warning">Pending</span>
+                                }
+                            </div>
+                            <div class="mt-3">
+                                <a asp-action="MyPayroll" class="btn btn-outline-success btn-sm w-100">
+                                    View All Payslips <i class="bi bi-arrow-right"></i>
+                                </a>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="text-center py-4">
+                                <i class="bi bi-cash fs-1 text-muted"></i>
+                                <p class="text-muted mt-2">No payroll records yet.</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-secondary text-white">
+                        <i class="bi bi-lightning"></i> Quick Links
+                    </div>
+                    <div class="card-body">
+                        <a asp-action="MyProfile" class="btn btn-outline-primary me-2 mb-2">
+                            <i class="bi bi-person"></i> My Profile
+                        </a>
+                        <a asp-controller="WorkTask" asp-action="Index" class="btn btn-outline-info me-2 mb-2">
+                            <i class="bi bi-list-task"></i> My Tasks
+                        </a>
+                        <a asp-action="MyPayroll" class="btn btn-outline-success me-2 mb-2">
+                            <i class="bi bi-cash-stack"></i> My Payroll
+                        </a>
+                        <a asp-controller="Document" asp-action="Index" class="btn btn-outline-secondary me-2 mb-2">
+                            <i class="bi bi-file-earmark-text"></i> Documents
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
